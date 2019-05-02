@@ -2,6 +2,7 @@
 using Stubble.Core.Builders;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,18 @@ namespace PrintPrototype
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            // TODO: Barcodes 10 %
+            // TODO: Images 10 %
+            // TODO: Mobile don't have it installed locally (20 %)
+            if (!IsPostBack)
+            {
+                String pkInstalledPrinters;
+                for (int i = 0; i < PrinterSettings.InstalledPrinters.Count; i++)
+                {
+                    pkInstalledPrinters = PrinterSettings.InstalledPrinters[i];
+                    ddInstalledPrinters.Items.Add(pkInstalledPrinters);
+                }
+            }
         }
 
         protected void btPrint_Click(object sender, EventArgs e)
@@ -31,7 +43,9 @@ namespace PrintPrototype
 
                 var path = Server.MapPath("~/Content/");
                 var PDF = Renderer.RenderHtmlAsPdf(output);
-                PDF.Print();
+                var document = PDF.GetPrintDocument();
+                document.PrinterSettings.PrinterName = ddInstalledPrinters.SelectedValue;
+                document.Print();
             }
         }
 

@@ -2,6 +2,9 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
+    <asp:DropDownList ID="ddInstalledPrinters" runat="server">
+        <asp:ListItem Text="" />        
+    </asp:DropDownList>
 
             <asp:Button ID="btToPDF" OnClick="btToPDF_Click" CssClass="btn btn-block" runat="server" Text="TO PDF" />
             <asp:Button ID="btPrint" OnClick="btPrint_Click" CssClass="btn btn-block" runat="server" Text="TO PRINT" />
