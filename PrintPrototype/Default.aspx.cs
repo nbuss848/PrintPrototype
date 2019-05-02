@@ -18,7 +18,24 @@ namespace PrintPrototype
             
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
+        protected void btPrint_Click(object sender, EventArgs e)
+        {
+            var stubble = new StubbleBuilder().Build();
+            var myObj = new Test() { name = "Chris", value = 10000, taxed_value = 100000, in_ca = true };
+            using (StreamReader streamReader = new StreamReader(Server.MapPath("~/Content/templates/template.Mustache"), Encoding.UTF8))
+            {
+                var output = stubble.Render(streamReader.ReadToEnd(), myObj);    
+
+                IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
+                Renderer.PrintOptions.CssMediaType = PdfPrintOptions.PdfCssMediaType.Screen;
+
+                var path = Server.MapPath("~/Content/");
+                var PDF = Renderer.RenderHtmlAsPdf(output);
+                PDF.Print();
+            }
+        }
+
+        protected void btToPDF_Click(object sender, EventArgs e)
         {
             var stubble = new StubbleBuilder().Build();
             var myObj = new Test() { name = "Chris", value = 10000, taxed_value = 100000, in_ca = true };
@@ -28,14 +45,12 @@ namespace PrintPrototype
                 // Do Stuff
 
                 IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
-         
+
                 Renderer.PrintOptions.CssMediaType = PdfPrintOptions.PdfCssMediaType.Screen;
-                //  Renderer.vi = 1280;
-                //// Renderer.RenderHtmlAsPdf(output).SaveAs(Server.MapPath("~/Content/templates/result.pdf"));
+
                 var path = Server.MapPath("~/Content/");
                 var PDF = Renderer.RenderHtmlAsPdf(output);
-                //PDF.SaveAs("~/Content/Result.pdf");
-                //Response.TransmitFile(PDF);
+
                 byte[] Binary = PDF.BinaryData;
                 Response.Clear();
                 Response.AddHeader("Content-Disposition", "attachment; filename=" + "Result.pdf");
