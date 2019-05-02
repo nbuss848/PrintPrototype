@@ -1,4 +1,5 @@
-﻿using IronPdf;
+﻿using IronBarCode;
+using IronPdf;
 using Stubble.Core.Builders;
 using System;
 using System.Collections.Generic;
@@ -51,8 +52,11 @@ namespace PrintPrototype
 
         protected void btToPDF_Click(object sender, EventArgs e)
         {
+            GeneratedBarcode MyBarCode = BarcodeWriter.CreateBarcode("Any Number, String or Binary Value", BarcodeWriterEncoding.Code128);
+            var image = MyBarCode.ToDataUrl();
+
             var stubble = new StubbleBuilder().Build();
-            var myObj = new Test() { name = "Chris", value = 10000, taxed_value = 100000, in_ca = true };
+            var myObj = new Test() { name = "Chris", value = 10000, taxed_value = 100000, in_ca = true, barcode =  image};
             using (StreamReader streamReader = new StreamReader(Server.MapPath("~/Content/templates/template.Mustache"), Encoding.UTF8))
             {
                 var output = stubble.Render(streamReader.ReadToEnd(), myObj);
